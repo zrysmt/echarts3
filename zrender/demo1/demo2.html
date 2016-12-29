@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>API使用</title>
+</head>
+
+<body>
+    <div id="main" style="width:1000px;height:600px;margin:0;"></div>
+    <script src="../esl.js"></script>
+    <script>
+    require.config({
+        packages: [{
+            name: 'zrender',
+            location: '../../src',
+            main: 'zrender'
+        }]
+    });
+    require(
+        ['zrender', 'zrender/graphic/shape/Circle', 'zrender/graphic/shape/Polygon'],
+        function(zrender, Circle, Polygon) {
+            // just init to get a zrender Instance
+            var zr = zrender.init(document.getElementById('main'));
+
+            var circle1 = new Circle({
+                shape: {
+                    cx: 100,
+                    cy: 100,
+                    r: 30
+                },
+                style: {
+                    fill: 'blue'
+                },
+                draggable: true
+            });
+
+            var circle2 = new Circle({
+                shape: {
+                    cx: 200,
+                    cy: 200,
+                    r: 100
+                }
+            });
+            circle1.on('mouseover', function () {
+                zr.dom.style.cursor = 'move';
+            });
+            circle1.on('mouseout', function () {
+                zr.dom.style.cursor = 'default';
+            });
+
+            circle2.on('dragenter', function () {
+            	console.log('dragenter');
+                this.setStyle('fill', 'red');
+            }).on('dragleave', function () {
+            	console.log('dragleave');
+                this.setStyle('fill', 'black');
+            }).on('drop', function () {
+            	console.log('drop');
+                this.setStyle('fill', 'green');
+            })
+            zr.add(circle2);
+            zr.add(circle1);
+
+            var arrow = new Polygon({
+                shape: {
+                    points: [
+                        [-10, 0],
+                        [10, 0],
+                        [0, 30]
+                    ]
+                },
+                style: {
+                    fill: 'blue'
+                },
+                position: [zr.getWidth() / 2, zr.getHeight() / 2],
+            });
+            arrow.scale[1] = 1.5;
+            zr.add(arrow);
+            zr.on('click', function(e) {
+                console.log(e);
+            });
+        }
+    );
+    </script>
+</body>
+
+</html>
