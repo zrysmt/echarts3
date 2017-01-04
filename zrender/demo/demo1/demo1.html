@@ -13,7 +13,7 @@
     require.config({
         packages: [{
             name: 'zrender',
-            location: '../src',
+            location: '../../src',
             main: 'zrender'
         }]
     });
@@ -22,6 +22,8 @@
         function(zrender, Circle, Polygon) {
             // just init to get a zrender Instance
             var zr = zrender.init(document.getElementById('main'));
+            
+            console.info(zrender);
 
             var circle1 = new Circle({
                 shape: {
@@ -61,7 +63,7 @@
             })
             zr.add(circle2);
             zr.add(circle1);
-            
+
             var arrow = new Polygon({
                 shape: {
                     points: [
