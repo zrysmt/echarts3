@@ -8,12 +8,12 @@
 
 <body>
     <div id="main" style="width:1000px;height:600px;margin:0;"></div>
-    <script src="../esl.js"></script>
+    <script src="../libs/esl.js"></script>
     <script>
     require.config({
         packages: [{
             name: 'zrender',
-            location: '../../src',
+            location: '../src',
             main: 'zrender'
         }]
     });
@@ -22,6 +22,8 @@
         function(zrender, Circle, Polygon) {
             // just init to get a zrender Instance
             var zr = zrender.init(document.getElementById('main'));
+            
+            console.info(zrender);
 
             var circle1 = new Circle({
                 shape: {

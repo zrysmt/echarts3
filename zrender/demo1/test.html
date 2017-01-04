@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>drag测试</title>
+    <style>
+    #divs {
+        border: solid 1px;
+        height: 600px;
+    }
+    
+    #div1 {
+        height: 100px;
+        width: 100px;
+        background-color: #f00;
+    }
+    
+    #div2 {
+        height: 100px;
+        width: 100px;
+        background-color: #0f0;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="divs">
+        <div id="div1" draggable="true"></div>
+        <div id="div2" draggable="true"></div>
+    </div>
+    <script>
+    var div1 = document.getElementById('div1');
+    var div2 = document.getElementById('div2');
+    var divs = document.getElementById('divs');
+    var x,y;
+    div1.ondragstart = function(e) {
+        console.log(e);
+        e.dataTransfer.effectAllowed = "move";  //移动效果
+        e.dataTransfer.setData("Text", e.target.id);
+        x = e.offsetX || e.layerX;
+        y = e.offsetY || e.layerY;
+    }
+    div1.ondragover = function(e) {
+        console.log('ondragover');
+        e.preventDefault();
+    }
+
+    div1.ondrop = function(e) {
+        console.log('drop');
+        e.preventDefault();
+
+    }
+   divs.ondragover = function(e) {
+        console.log('divs ondragover');
+        e.preventDefault();
+    }
+   divs.ondrop = function(e) {
+        console.log('drop');
+        var div = e.dataTransfer.getData("Text");
+        console.log(div);
+        div1.style.left = (e.pageX - x) + 'px';
+        div1.style.top = (e.pageY - y) + 'px';
+        // e.target.appendChild(document.getElementById(div));
+        e.preventDefault();
+    }
+    </script>
+</body>
+
+</html>

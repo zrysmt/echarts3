@@ -120,7 +120,7 @@ define(function(require) {
         var storage = new Storage();
 
         var rendererType = opts.renderer;
-        if (useVML) {
+        if (useVML) {//IE中使用VML渲染
             if (!painterCtors.vml) {
                 throw new Error('You need to require \'zrender/vml/vml\' to support IE8');
             }
@@ -131,12 +131,14 @@ define(function(require) {
         }
         var painter = new painterCtors[rendererType](dom, storage, opts);
 
-        this.storage = storage;
-        this.painter = painter;
+        this.storage = storage;//M
+        this.painter = painter;//V
 
         var handerProxy = !env.node ? new HandlerProxy(painter.getViewportRoot()) : null;
-        this.handler = new Handler(storage, painter, handerProxy, painter.root);
+        this.handler = new Handler(storage, painter, handerProxy, painter.root);//C
 
+        window.zrender = this;//这里是我增加的为了调试使用的
+        console.log(this);
         /**
          * @type {module:zrender/animation/Animation}
          * 动画控制
@@ -186,7 +188,7 @@ define(function(require) {
         },
 
         /**
-         * 添加元素
+         * 添加元素后就会渲染
          * @param  {module:zrender/Element} el
          */
         add: function (el) {
