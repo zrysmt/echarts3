@@ -3,11 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>chart</title>
+    <title>DOM是canvas,会转策成图片</title>
 </head>
 
 <body>
-    <div id="main" style="width:1000px;height:600px;margin:0;"></div>
+    <canvas id="main" style="width:1000px;height:600px;margin:0;">
     <script src="../libs/esl.js"></script>
     <script>
     /**
@@ -50,8 +50,8 @@
             var r = 100;
 
             var cssArr = [
-                "#cc3300", "#cc6600", "#cc9900",
-                "#cc0033", "#cc0066", "#cc0099"
+       			"#cc3300","#cc6600","#cc9900",
+       			"#cc0033","#cc0066","#cc0099"
             ];
             for (var i = 0, l = data.length; i < l; i++) {
 
@@ -59,9 +59,10 @@
                 endAngle = (percent * 2 * Math.PI + startAngle).toFixed(2) - 0;
                 percent = (percent * 100).toFixed(2) + '%';
 
-                // console.log(startAngle, endAngle);
+                console.log(startAngle, endAngle);
 
                 var sector = new SectorShape({
+                    scale: [1, 1],
                     shape: {
                         cx: x, // 圆心横坐标
                         cy: y, // 圆心纵坐标
@@ -96,7 +97,6 @@
                 zr.add(sector);
                 startAngle = endAngle;
             }
-
             // zr.render();
         }
     );

@@ -1,5 +1,5 @@
 /**
- * Only implements needed gestures for mobile.
+ * Only implements needed gestures for mobile.手机端手势事件
  */
 define(function(require) {
 

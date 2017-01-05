@@ -177,8 +177,8 @@
          * @type {private}
          */
         this._layerConfig = {};
-
-        if (!singleCanvas) {//没有画布，就使用div
+        console.info("singleCanvas:",singleCanvas);
+        if (!singleCanvas) {//root不是画布，就新建div
             this._width = this._getSize(0);
             this._height = this._getSize(1);
 
@@ -187,7 +187,7 @@
             );
             root.appendChild(domRoot);
         }
-        else {//已经有块画布
+        else {//root是画布
             // Use canvas width and height directly
             var width = root.width;
             var height = root.height;
@@ -199,6 +199,9 @@
             // dpr设置为1，是因为canvas已经定了宽和高
             var mainLayer = new Layer(root, this, 1);
             mainLayer.initContext();
+            //this.ctx = this.dom.getContext('2d');
+            // this.ctx.dpr = this.dpr;
+
             // FIXME Use canvas width and height
             // mainLayer.resize(width, height);
             layers[0] = mainLayer;
@@ -217,6 +220,8 @@
         this._hoverlayer;
 
         this._hoverElements = [];
+
+        console.log(this);
     };
 
     Painter.prototype = {
@@ -243,13 +248,15 @@
          */
         refresh: function (paintAll) {
 
-            var list = this.storage.getDisplayList(true);
-
+            var list = this.storage.getDisplayList(true);//要绘制的图形
             var zlevelList = this._zlevelList;
 
-            this._paintList(list, paintAll);
+            console.info("list:",list);
+            console.info("zlevelList:",zlevelList);
 
-            // Paint custum layers
+            this._paintList(list, paintAll);//去绘制
+
+            // Paint custum layers 绘制layer层
             for (var i = 0; i < zlevelList.length; i++) {
                 var z = zlevelList[i];
                 var layer = this._layers[z];
@@ -258,7 +265,7 @@
                 }
             }
 
-            this.refreshHover();
+            this.refreshHover();//刷新hover层
 
             if (this._progressiveLayers.length) {
                 this._startProgessive();
@@ -315,7 +322,7 @@
 
             // Use a extream large zlevel
             // FIXME?
-            if (!hoverLayer) {
+            if (!hoverLayer) {//不存在则会新创建一层canvas
                 hoverLayer = this._hoverlayer = this.getLayer(1e5);
             }
 

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>API使用</title>
+    <title>API使用-add addHover</title>
 </head>
 
 <body>
@@ -61,9 +61,18 @@
             })
             zr.add(circle2);
             zr.add(circle1);
-            /*zr.addHover(circle1,{
-                    stroke: 'red'
-                });*/
+
+            circle1.on('mouseover', function () {
+                zr.addHover(this, {
+                    stroke: 'yellow',
+                    lineWidth: 10,
+                    opacity: 1
+                });
+                zr.refresh();
+            });
+            circle1.on('mouseout', function () {
+                zr.removeHover(this);
+            });
             
             var arrow = new Polygon({
                 shape: {

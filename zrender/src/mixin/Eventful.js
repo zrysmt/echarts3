@@ -14,7 +14,7 @@ define(function (require) {
      * @constructor
      */
     var Eventful = function () {
-        this._$handlers = {};
+        this._$handlers = {};//保存事件的对象
     };
 
     Eventful.prototype = {

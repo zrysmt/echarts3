@@ -95,6 +95,18 @@
                 });
                 zr.add(sector);
                 startAngle = endAngle;
+                //其实这里最好是group，然后监听事件
+                sector.on('mouseover', function() {
+                    zr.addHover(this, {
+                        stroke: 'yellow',
+                        lineWidth: 10,
+                        opacity: 1
+                    });
+                    zr.refresh();
+                });
+                sector.on('mouseout', function() {
+                    zr.removeHover(this);
+                });
             }
 
             // zr.render();

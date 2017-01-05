@@ -1,3 +1,6 @@
+/**
+ * 应该是手机端的一些处理事件
+ */
 define(function (require) {
 
     var eventTool = require('../core/event');

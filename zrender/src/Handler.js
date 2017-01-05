@@ -82,13 +82,13 @@ define(function (require) {
          * @private
          * @type {number}
          */
-        this._lastX;
+        this._lastX;//坐标位置x
 
         /**
          * @private
          * @type {number}
          */
-        this._lastY;
+        this._lastY;//坐标位置y
 
 
         Draggable.call(this);
@@ -204,7 +204,7 @@ define(function (require) {
                 el[eventHandler]
                     && (eventPacket.cancelBubble = el[eventHandler].call(el, eventPacket));
 
-                el.trigger(eventName, eventPacket);
+                el.trigger(eventName, eventPacket);//触发
 
                 el = el.parent;
 
@@ -223,7 +223,7 @@ define(function (require) {
                         layer[eventHandler].call(layer, eventPacket);
                     }
                     if (layer.trigger) {
-                        layer.trigger(eventName, eventPacket);
+                        layer.trigger(eventName, eventPacket);//触发
                     }
                 });
             }
