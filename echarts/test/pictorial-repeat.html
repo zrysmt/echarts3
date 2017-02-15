@@ -1,0 +1,601 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="esl.js"></script>
+        <script src="config.js"></script>
+        <script src="lib/jquery.min.js"></script>
+        <script src="lib/facePrint.js"></script>
+        <script src="data/symbols.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="reset.css">
+    </head>
+    <body>
+        <style>
+            body {
+            }
+            .chart {
+                position: relative;
+                height: 500px;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+            h2 {
+                text-align: center;
+                font-size: 16px;
+                line-height: 30px;
+                font-weight: normal;
+                background: #dde;
+            }
+        </style>
+
+        <h2>vertical | no clip | symbol w/h ratio and margin adjust</h2>
+        <div class="chart" id="main1"></div>
+        <h2>vertical | clip | fixed repeatTimes</h2>
+        <div class="chart" id="main1.1"></div>
+        <h2>dataURI | symbolSize responsive (<strong>TRY RESIZE</strong>)</h2>
+        <div class="chart" id="symbolSize"></div>
+        <h2>horizontal | clip | positive | rotate</h2>
+        <div class="chart" id="main2"></div>
+        <h2>horizontal | clip | negative | no animation</h2>
+        <div class="chart" id="main3"></div>
+        <h2>negative symbolMargin | symbolPosition (check whether overflow)</h2>
+        <div class="chart" id="main4"></div>
+
+        <script>
+
+            function makeChart(id, option, noDataZoom) {
+                require([
+                    'echarts',
+                    'echarts/chart/pictorialBar',
+                    'echarts/chart/bar',
+                    'echarts/chart/scatter',
+                    'echarts/component/grid',
+                    'echarts/component/legend',
+                    'echarts/component/tooltip',
+                    'echarts/component/dataZoom'
+                ], function (echarts) {
+                    var main = document.getElementById(id);
+                    if (main) {
+                        var chartMain = document.createElement('div');
+                        chartMain.style.cssText = 'height:100%';
+                        main.appendChild(chartMain);
+                        var chart = echarts.init(chartMain);
+                        chart.setOption(option);
+
+                        window.addEventListener('resize', chart.resize);
+                    }
+
+                });
+            }
+
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            makeChart('main1', {
+                legend: {
+                    data: ['data', 'data2', 'bg', 'original bar', 'original bg'],
+                    selected: {
+                        'original bar': false,
+                        'original bg': false
+                    }
+                },
+                tooltip: {
+                },
+                yAxis: {
+                    data: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                    axisTick: {show: false}
+                },
+                xAxis: {
+                    splitLine: {show: false}
+                },
+                // animationDuration: 2000,
+                // animationDurationUpdate: 2000,
+                series: [{
+                    name: 'data',
+                    type: 'pictorialBar',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'outside'
+                        },
+                    },
+                    symbol: pathSymbols.plane,
+                    symbolRepeat: true,
+                    symbolMargin: '40%',
+                    symbolSize: ['100%', '80%'],
+                    z: 10,
+                    data: [12, 60, 54, '-', 23, -16, 0, 25]
+                }, {
+                    name: 'data2',
+                    type: 'pictorialBar',
+                    symbol: pathSymbols.plane,
+                    symbolRepeat: true,
+                    symbolMargin: '40%',
+                    symbolSize: ['100%', '80%'],
+                    z: 10,
+                    data: [33, 1, 41, -18, 23, -56, 0, 15]
+                }, {
+                    name: 'original bar',
+                    type: 'bar',
+                    color: ['rgba(0,0,0,0.5)'],
+                    data: [12, 60, 54, '-', 23, -16, 0, 25]
+                }, {
+                    name: 'original bg',
+                    type: 'bar',
+                    color: ['rgba(0,0,0,0.5)'],
+                    data: [60, 60, 60, '-', 60, -30, 60, 60]
+                }]
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+
+            makeChart('symbolSize', {
+                color: ['#e54035'],
+                xAxis: {
+                    splitLine: {show: false},
+                    axisTick: {show: false},
+                    axisLine: {show: false},
+                    axisLabel: {show: false}
+                },
+                yAxis: {
+                    data: ['a', 'b', 'c'],
+                    axisTick: {show: false},
+                    axisLine: {show: false},
+                    axisLabel: {show: false}
+                },
+                grid: {
+                    height: 80
+                },
+                series: [{
+                    name: 'glyph',
+                    type: 'pictorialBar',
+                    symbol: imageSymbols.spirit,
+                    symbolRepeat: 10,
+                    symbolSize: [20, 20],
+                    data: [100, 100, 100]
+                }, {
+                    name: 'glyph',
+                    type: 'pictorialBar',
+                    symbol: 'rect',
+                    barGap: '-100%',
+                    symbolSize: ['20%', 24],
+                    itemStyle: {
+                        normal: {
+                            color: '#e54035'
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            formatter: '16 亿',
+                            textStyle: {
+                                color: '#fff',
+                                fontSize: 18,
+                                fontFamily: 'Arial',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    data: ['-', 100, '-'],
+                    z: 100
+                }]
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+        <script>
+            makeChart('main1.1', {
+                legend: {
+                    data: ['data', 'bg'],
+                    selected: {
+                        'original bar': false,
+                        'original bg': false
+                    }
+                },
+                tooltip: {
+                },
+                yAxis: {
+                    data: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                    axisTick: {show: false},
+                    axisLine: {show: false}
+                },
+                xAxis: {
+                    splitLine: {show: false},
+                    axisTick: {show: false},
+                    axisLabel: {show: false},
+                    axisLine: {show: false}
+                },
+                // animationDuration: 2000,
+                // animationDurationUpdate: 2000,
+                series: [{
+                    name: 'bg',
+                    type: 'pictorialBar',
+                    symbol: pathSymbols.pentagram,
+                    symbolRepeat: 5,
+                    itemStyle: {
+                        normal: {
+                            color: '#ddd'
+                        }
+                    },
+                    barGap: '-100%',
+                    data: [12, 60, 54, 25, 23, 16, 1, 25]
+                }, {
+                    name: 'data',
+                    type: 'pictorialBar',
+                    symbol: pathSymbols.pentagram,
+                    symbolRepeat: 5,
+                    symbolClip: true,
+                    z: 10,
+                    data: [12, 60, 54, 25, 23, 16, 1, 25]
+                }]
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            makeChart('main2', {
+                legend: {
+                    data: ['data', 'bg', 'original bar', 'original bg'],
+                    selected: {
+                        'original bar': false,
+                        'original bg': false
+                    }
+                },
+                tooltip: {
+                    // trigger: 'axis',
+                    // axisPointer: {
+                    //     type: 'line'
+                    // }
+                },
+                xAxis: {
+                    data: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                    axisTick: {show: false}
+                },
+                yAxis: {
+                    splitLine: {show: false}
+                },
+                series: [{
+                    name: 'bg',
+                    type: 'pictorialBar',
+                    barGap: '-100%',
+                    symbol: pathSymbols.pumpkin,
+                    symbolRotate: 30,
+                    itemStyle: {
+                        normal: {
+                            color: '#ddd'
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'outside',
+                            textStyle: {
+                                color: '#c23531',
+                                fontSize: 20
+                            }
+                        }
+                    },
+                    silent: true,
+                    symbolRepeat: true,
+                    // symbolRepeatDirection: 'start',
+                    symbolBoundingData: 60,
+                    data: [12, 60, 54, '-', 23, 2, 0, 25]
+                }, {
+                    name: 'data',
+                    type: 'pictorialBar',
+                    symbol: pathSymbols.pumpkin,
+                    symbolRotate: 30,
+                    symbolRepeat: true,
+                    symbolClip: true,
+                    symbolBoundingData: 60,
+                    z: 10,
+                    data: [12, 60, 54, '-', 23, -2, 0, 25]
+                }, {
+                    name: 'original bar',
+                    type: 'bar',
+                    color: ['rgba(0,0,0,0.5)'],
+                    data: [12, 60, 54, '-', 23, -2, 0, 25]
+                }, {
+                    name: 'original bg',
+                    type: 'bar',
+                    color: ['rgba(0,0,0,0.5)'],
+                    data: [60, 60, 60, '-', 60, 60, 60, 60]
+                }]
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            makeChart('main3', {
+                animation: false,
+                legend: {
+                    data: ['data', 'bg', 'original bar', 'original bg'],
+                    selected: {
+                        'original bar': false,
+                        'original bg': false
+                    }
+                },
+                tooltip: {
+                    // trigger: 'axis',
+                    // axisPointer: {
+                    //     type: 'line'
+                    // }
+                },
+                xAxis: {
+                    data: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                    axisTick: {show: false},
+                    position: 'top'
+                },
+                yAxis: {
+                    splitLine: {show: false}
+                },
+                series: [{
+                    name: 'bg',
+                    type: 'pictorialBar',
+                    barGap: '-100%',
+                    symbol: pathSymbols.pumpkin,
+                    itemStyle: {
+                        normal: {
+                            color: '#ddd'
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'outside',
+                            textStyle: {
+                                color: '#c23531',
+                                fontSize: 20
+                            }
+                        }
+                    },
+                    silent: true,
+                    symbolRepeat: true,
+                    symbolClip: false,
+                    symbolBoundingData: -60,
+                    symbolRotate: 30,
+                    data: [-12, -60, -54, '-', -23, -2, 0, -25]
+                }, {
+                    name: 'data',
+                    type: 'pictorialBar',
+                    itemStyle: {
+                        emphasis: {
+                            color: 'blue'
+                        }
+                    },
+                    symbol: pathSymbols.pumpkin,
+                    symbolRepeat: true,
+                    symbolClip: true,
+                    symbolRotate: 30,
+                    symbolBoundingData: -60,
+                    data: [-12, -60, -54, '-', -23, -2, 0, -25]
+                }, {
+                    name: 'original bar',
+                    type: 'bar',
+                    color: ['rgba(0,0,0,0.5)'],
+                    data: [-12, -60, -54, '-', -23, -2, 0, -25]
+                }, {
+                    name: 'original bg',
+                    type: 'bar',
+                    color: ['rgba(0,0,0,0.5)'],
+                    data: [-60, -60, -60, '-', -60, -60, -60, -60]
+                }]
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+
+            makeChart('main4', {
+                color: ['#bb0004', 'orange'],
+                xAxis: {
+                    data: [],
+                    axisTick: {show: false},
+                    axisLabel: {show: false}
+                },
+                yAxis: {
+                    splitLine: {show: false},
+                    axisTick: {show: false},
+                    axisLine: {show: false},
+                    axisLabel: {show: false}
+                },
+                grid: {
+                    bottom: 100
+                },
+                animationEasing: 'elasticOut',
+                series: [{
+                    name: 'all',
+                    type: 'pictorialBar',
+                    barCategoryGap: '40%',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'outside'
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderColor: 'rgba(0,0,0,0.5)',
+                            borderWidth: 6
+                        }
+                    },
+                    symbol: 'circle',
+                    data: [{
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolSize: ['80%', '20%'],
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolMargin: 10,
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolMargin: 30,
+                        symbolSize: ['100%', 160],
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolMargin: 30,
+                        symbolSize: ['100%', 160],
+                        symbolPosition: 'center',
+                        label: {normal: {formatter: 'center'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolMargin: 30,
+                        symbolSize: ['100%', 160],
+                        symbolPosition: 'end',
+                        label: {normal: {formatter: 'end'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolSize: ['80%', '120%'],
+                        symbolMargin: '-30%',
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolSize: ['80%', '120%'],
+                        symbolMargin: '-30%',
+                        symbolPosition: 'center',
+                        label: {normal: {formatter: 'center'}}
+                    }, {
+                        value: 29000,
+                        symbolBoundingData: 29000,
+                        symbolRepeat: true,
+                        symbolRotate: 80,
+                        symbolSize: ['80%', '120%'],
+                        symbolMargin: '-30%',
+                        symbolPosition: 'end',
+                        label: {normal: {formatter: 'end'}}
+                    }, {
+                        value: 19000,
+                        symbolPosition: 'start',
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 19000,
+                        symbolSize: ['60%', '20%'],
+                        symbolPosition: 'start',
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 19000,
+                        symbolSize: ['60%', '20%'],
+                        symbolPosition: 'center',
+                        label: {normal: {formatter: 'center'}}
+                    }, {
+                        value: 19000,
+                        symbolSize: ['60%', '20%'],
+                        symbolPosition: 'end',
+                        label: {normal: {formatter: 'end'}}
+                    }, {
+                        value: 19000,
+                        symbolSize: ['60%', '150%'],
+                        symbolPosition: 'start',
+                        label: {normal: {formatter: 'start'}}
+                    }, {
+                        value: 19000,
+                        symbolSize: ['60%', '150%'],
+                        symbolPosition: 'center',
+                        label: {normal: {formatter: 'center'}}
+                    }, {
+                        value: 19000,
+                        symbolSize: ['60%', '150%'],
+                        symbolPosition: 'end',
+                        label: {normal: {formatter: 'end'}}
+                    }, {
+                        value: 190,
+                        symbolPosition: 'end',
+                        label: {normal: {formatter: 'min'}}
+                    }],
+                    z: 10
+                }, {
+                    name: 'shadow2',
+                    type: 'bar',
+                    barGap: '-100%',
+                    data: [29000, 29000, 29000, 29000, 29000, 29000, 29000, 29000, 29000, 19000, 19000, 19000, 19000, 19000, 19000, 19000, 19]
+                }]
+            });
+        </script>
+
+
+
+
+
+    </body>
+</html>
