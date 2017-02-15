@@ -270,6 +270,9 @@ define(function (require) {
                 }
             }
 
+            console.info("hovered:",hovered);
+            console.info(this);
+
             this.dispatchToElement(hovered, name, event);
         };
     });
