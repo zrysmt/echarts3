@@ -60,7 +60,7 @@ define(function (require) {
             zrUtil.merge(this.option, option, true);
         },
 
-        /**
+        /**通过options的对象名获取对象值
          * @param {string|Array.<string>} path
          * @param {boolean} [ignoreParent=false]
          * @return {*}
@@ -93,7 +93,7 @@ define(function (require) {
             return val;
         },
 
-        /**
+        /**通过options的对象名获取对象值
          * @param {string|Array.<string>} path
          * @param {module:echarts/model/Model} [parentModel]
          * @return {module:echarts/model/Model}

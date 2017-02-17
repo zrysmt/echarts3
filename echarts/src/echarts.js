@@ -1,3 +1,7 @@
+/**
+ * 中文注释  by zry
+ * 2017-2-15
+ */
 // Enable DEV mode when using source code without build. which has no __DEV__ variable
 // In build process 'typeof __DEV__' will be replace with 'boolean'
 // So this code will be removed or disabled anyway after built.
@@ -125,7 +129,7 @@ define(function (require) {
             devicePixelRatio: opts.devicePixelRatio,
             width: opts.width,
             height: opts.height
-        });
+        });//构造函数第三个参数使用的zrender处理的
 
         /**
          * Expect 60 pfs.
@@ -144,7 +148,7 @@ define(function (require) {
          * @type {Array.<module:echarts/view/Chart>}
          * @private
          */
-        this._chartsViews = [];
+        this._chartsViews = [];//存储所有的charts，为后面便利该变量渲染之
 
         /**
          * @type {Object.<string, module:echarts/view/Chart>}
@@ -156,7 +160,7 @@ define(function (require) {
          * @type {Array.<module:echarts/view/Component>}
          * @private
          */
-        this._componentsViews = [];
+        this._componentsViews = [];//存储配置项组件的属性，为后面便利该变量渲染之
 
         /**
          * @type {Object.<string, module:echarts/view/Component>}
@@ -168,8 +172,9 @@ define(function (require) {
          * @type {module:echarts/ExtensionAPI}
          * @private
          */
-        this._api = new ExtensionAPI(this);
-
+        this._api = new ExtensionAPI(this);//this._api是有'getDom', 'getZr', 'getWidth', 'getHeight', 'dispatchAction', 'isDisposed',
+        //'on', 'off', 'getDataURL', 'getConnectedDataURL', 'getModel', 'getOption'方法的对象
+        console.log("this._api:",this._api,Object.prototype.toString.call(this._api));
         /**
          * @type {module:echarts/CoordinateSystem}
          * @private
@@ -185,7 +190,7 @@ define(function (require) {
         this._messageCenter = new MessageCenter();
 
         // Init mouse events
-        this._initEvents();
+        this._initEvents();//初始化鼠标事件
 
         // In case some people write `window.onresize = chart.resize`
         this.resize = zrUtil.bind(this.resize, this);
@@ -232,9 +237,10 @@ define(function (require) {
     };
 
     /**
-     * @param {Object} option
-     * @param {boolean} notMerge
+     * @param {Object} option 配置项
+     * @param {boolean} notMerge 可选，是否不跟之前设置的option进行合并，默认为false，即合并。
      * @param {boolean} [lazyUpdate=false] Useful when setOption frequently.
+     * //可选，在设置完option后是否不立即更新图表，默认为false，即立即更新
      */
     echartsProto.setOption = function (option, notMerge, lazyUpdate) {
         if (__DEV__) {
@@ -242,31 +248,44 @@ define(function (require) {
         }
 
         this[IN_MAIN_PROCESS] = true;
-
-        if (!this._model || notMerge) {
-            var optionManager = new OptionManager(this._api);
+        //重要** this._model用来存储配置项options的，后面我们有打印结果到console
+        
+        if (!this._model || notMerge) {//不和之前的option合并
+            var optionManager = new OptionManager(this._api);//option配置管理
             var theme = this._theme;
             var ecModel = this._model = new GlobalModel(null, null, theme, optionManager);
             ecModel.init(null, null, theme, optionManager);
+            //不合并的时候会重绘，option为最后一次使用setOption方法的参数
         }
 
         // FIXME
         // ugly
-        this.__lastOnlyGraphic = !!(option && option.graphic);
+        this.__lastOnlyGraphic = !!(option && option.graphic);//是否设置了graphic属性
+        //graphic 是原生图形元素组件。可以支持的图形元素包括：image, text, circle, sector, 
+        //ring, polygon, polyline, rect, line, bezierCurve, arc, group,
+        //http://echarts.baidu.com/option.html#graphic
         zrUtil.each(option, function (o, mainType) {
             mainType !== 'graphic' && (this.__lastOnlyGraphic = false);
         }, this);
 
+        console.log("optionPreprocessorFuncs",optionPreprocessorFuncs);
+        //setOption之前先执行的函数列表optionPreprocessorFuncs
+        //这里调用的顺序是这样的echarts.setOption==>GlobalModel.setOption(GlobalModel.js)
+        //==>OptionManager.setOption(OptionMManager.js) 
         this._model.setOption(option, optionPreprocessorFuncs);
+        console.info("this:",this);
+        console.info("this._model:",this._model);
 
-        if (lazyUpdate) {
+        if (lazyUpdate) {//为true，不立刻更新
             this[OPTION_UPDATED] = true;
         }
         else {
-            updateMethods.prepareAndUpdate.call(this);
+            updateMethods.prepareAndUpdate.call(this);//准备更新
+            
             // Ensure zr refresh sychronously, and then pixel in canvas can be
             // fetched after `setOption`.
-            this._zr.flush();
+            this._zr.flush();//调用zrender中的方法，立即刷新
+            // debugger;
             this[OPTION_UPDATED] = false;
         }
 
@@ -606,7 +625,8 @@ define(function (require) {
          * @private
          */
         update: function (payload) {
-            // console.time && console.time('update');
+            console.log('!!update start');
+            console.time && console.time('update');
 
             var ecModel = this._model;
             var api = this._api;
@@ -679,7 +699,7 @@ define(function (require) {
                 }
             }
 
-            // console.time && console.timeEnd('update');
+            console.time && console.timeEnd('update');
         },
 
         /**
@@ -754,7 +774,7 @@ define(function (require) {
 
             // FIXME
             // ugly
-            if (this.__lastOnlyGraphic) {
+            if (this.__lastOnlyGraphic) {//设置了graphic属性
                 each(this._componentsViews, function (componentView) {
                     var componentModel = componentView.__model;
                     if (componentModel && componentModel.mainType === 'graphic') {
@@ -1168,16 +1188,18 @@ define(function (require) {
     }
 
     /**
+     * 重要的方法
      * Render each chart and component
      * @private
      */
     function doRender(ecModel, payload) {
         var api = this._api;
-        // Render all components
+        // Render all components 渲染所有的配置组件,例如title,grid,toolbox,tooltip等
         each(this._componentsViews, function (componentView) {
             var componentModel = componentView.__model;
+            console.info("componentModel:",componentModel);
             componentView.render(componentModel, ecModel, api, payload);
-
+            //在componentModal文件夹下调用相应的render方法
             updateZ(componentModel, componentView);
         }, this);
 
@@ -1185,10 +1207,12 @@ define(function (require) {
             chart.__alive = false;
         }, this);
 
-        // Render all charts
+        // Render all charts 渲染所有的charts
         ecModel.eachSeries(function (seriesModel, idx) {
-            var chartView = this._chartsMap[seriesModel.__viewId];
+            var chartView = this._chartsMap[seriesModel.__viewId];//this._chartsMap
             chartView.__alive = true;
+            console.info("chartView:",chartView);
+
             chartView.render(seriesModel, ecModel, api, payload);
 
             chartView.group.silent = !!seriesModel.get('silent');
@@ -1199,7 +1223,7 @@ define(function (require) {
 
         }, this);
 
-        // If use hover layer
+        // If use hover layer 如果使用hover，更新hover层
         updateHoverLayerStatus(this._zr, ecModel);
 
         // Remove groups of unrendered charts
@@ -1429,19 +1453,20 @@ define(function (require) {
             zrender: '3.2.2'
         }
     };
-
+    //按照顺序更新状态
     function enableConnect(chart) {
-
+        //一共三种状态
         var STATUS_PENDING = 0;
         var STATUS_UPDATING = 1;
         var STATUS_UPDATED = 2;
         var STATUS_KEY = '__connectUpdateStatus';
-        function updateConnectedChartsStatus(charts, status) {
+        function updateConnectedChartsStatus(charts, status) {//更新状态
             for (var i = 0; i < charts.length; i++) {
                 var otherChart = charts[i];
                 otherChart[STATUS_KEY] = status;
             }
         }
+        console.log("eventActionMap:",eventActionMap);
         zrUtil.each(eventActionMap, function (actionType, eventType) {
             chart._messageCenter.on(eventType, function (event) {
                 if (connectedGroups[chart.group] && chart[STATUS_KEY] !== STATUS_PENDING) {
@@ -1454,13 +1479,13 @@ define(function (require) {
                         }
                     });
 
-                    updateConnectedChartsStatus(otherCharts, STATUS_PENDING);
+                    updateConnectedChartsStatus(otherCharts, STATUS_PENDING);//状态0
                     each(otherCharts, function (otherChart) {
-                        if (otherChart[STATUS_KEY] !== STATUS_UPDATING) {
+                        if (otherChart[STATUS_KEY] !== STATUS_UPDATING) {//状态1
                             otherChart.dispatchAction(action);
                         }
                     });
-                    updateConnectedChartsStatus(otherCharts, STATUS_UPDATED);
+                    updateConnectedChartsStatus(otherCharts, STATUS_UPDATED);//状态2
                 }
             });
         });
@@ -1511,7 +1536,10 @@ define(function (require) {
         dom.setAttribute &&
             dom.setAttribute(DOM_ATTRIBUTE_KEY, chart.id);//为外层dom设置了一个属性，属性值等于chart.id
 
-        enableConnect(chart);
+        enableConnect(chart);//按照顺序更新状态，一共三个状态
+        /*var STATUS_PENDING = 0;
+        var STATUS_UPDATING = 1;
+        var STATUS_UPDATED = 2;*/
 
         return chart;
     };

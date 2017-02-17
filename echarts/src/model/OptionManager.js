@@ -1,4 +1,7 @@
 /**
+ * option配置管理
+ */
+/**
  * ECharts option manager
  *
  * @module {echarts/model/OptionManager}
@@ -139,7 +142,7 @@ define(function (require) {
          * @return {Object} Init option
          */
         setOption: function (rawOption, optionPreprocessorFuncs) {
-            rawOption = clone(rawOption, true);
+            rawOption = clone(rawOption, true); 
 
             // FIXME
             // 如果 timeline options 或者 media 中设置了某个属性，而baseOption中没有设置，则进行警告。
@@ -147,17 +150,18 @@ define(function (require) {
             var oldOptionBackup = this._optionBackup;
             var newParsedOption = parseRawOption.call(
                 this, rawOption, optionPreprocessorFuncs, !oldOptionBackup
-            );
+            );//处理option，处理结果返回一个对象
             this._newBaseOption = newParsedOption.baseOption;
 
             // For setOption at second time (using merge mode);
-            if (oldOptionBackup) {
+            if (oldOptionBackup) {//如果是第二次使用setOption,则合并option
                 // Only baseOption can be merged.
                 mergeOption(oldOptionBackup.baseOption, newParsedOption.baseOption);
 
                 // For simplicity, timeline options and media options do not support merge,
                 // that is, if you `setOption` twice and both has timeline options, the latter
                 // timeline opitons will not be merged to the formers, but just substitude them.
+                // timeline和media的options项不会合并，如果多次使用，最后一次会替代前面的
                 if (newParsedOption.timelineOptions.length) {
                     oldOptionBackup.timelineOptions = newParsedOption.timelineOptions;
                 }
@@ -320,7 +324,7 @@ define(function (require) {
             })),
             function (option) {
                 each(optionPreprocessorFuncs, function (preProcess) {
-                    preProcess(option, isNew);
+                    preProcess(option, isNew);//执行optionPreprocessorFuncs函数(可能多个)
                 });
             }
         );
