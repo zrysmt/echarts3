@@ -1,16 +1,22 @@
-# ECharts
 
-<a href="http://echarts.baidu.com">
-    <img style="vertical-align: top;" src="./asset/logo.png?raw=true" alt="logo" height="50px">
-</a>
+## File
++ `demo` 自己写的一些例子
++ `extension` （扩展中使用）
++ `lib` （源码中没有，执行webpack编译后才存在）
++ `map` （世界地图，中国地图及中国各个省份地图的js和json两种格式的文件）
++ `src` （核心源码）
++ `test` （示例demo）
++ `theme` （主题）
 
-ECharts is a free, powerful charting and visualization library offering an easy way of adding intuitive, interactive, and highly customizable charts to your commercial products. It is written in pure JavaScript and based on <a href="https://github.com/ecomfe/zrender">zrender</a>, which is a whole new lightweight canvas library.
+源码入口文件在`src/echarts.js`
 
-## Get ECharts
-
-+ Download on [echarts.baidu.com](http://echarts.baidu.com/download.html)
-+ `npm install echarts --save`
-
+## Package
+打包命令如下，详见博客说明。
+```bash
+npm install  //安装所有依赖包
+webpack      //打包
+webpack -p   //打成压缩包（.min.js）
+```
 ## Docs
 
 + [Tutorial](http://echarts.baidu.com/tutorial.html)
@@ -96,31 +102,3 @@ ECharts is a free, powerful charting and visualization library offering an easy 
 
 + [Echarts-PHP](https://github.com/hisune/Echarts-PHP) by hisune
 
-
-## License
-Copyright (c) 2013, Baidu Inc.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are those
-of the authors and should not be interpreted as representing official policies,
-either expressed or implied, of the FreeBSD Project.
