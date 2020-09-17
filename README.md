@@ -1,4 +1,4 @@
-主要分为两个部分，第一个部分是echarts底层zrender源码，第二个部分是echarts源码。
+主要分为两个部分，第一个部分是[Apache ECharts (incubating)](https://github.com/apache/incubator-echarts)底层zrender源码，第二个部分是echarts源码。
 
 均是基于3.x版本。
 
